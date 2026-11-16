@@ -1,8 +1,8 @@
-name: Daily patient estimates
+name: Weekly patient estimates
 
 on:
   schedule:
-    - cron: '17 6 * * *'
+    - cron: '17 6 * * 1'
   workflow_dispatch:
   push:
     branches: [main]
@@ -19,7 +19,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: publish-daily-estimates
+  group: publish-patient-estimates
   cancel-in-progress: false
 
 jobs:

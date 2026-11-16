@@ -1,4 +1,4 @@
-"""Install or remove the daily local refresh for the logged-in macOS user."""
+"""Install or remove the weekly local refresh for the logged-in macOS user."""
 import argparse
 import os
 from pathlib import Path
@@ -37,7 +37,7 @@ def main():
         "Label": LABEL,
         "ProgramArguments": ["/bin/zsh", "-ic", 'exec "$@"', LABEL, sys.executable, str(ROOT / "estimate.py")],
         "WorkingDirectory": str(ROOT), "RunAtLoad": True,
-        "StartCalendarInterval": {"Hour": 7, "Minute": 15},
+        "StartCalendarInterval": {"Weekday": 1, "Hour": 7, "Minute": 15},
         "StandardOutPath": str(logs / "refresh.log"), "StandardErrorPath": str(logs / "refresh.err"),
     }
     contents = plistlib.dumps(config)
@@ -49,7 +49,7 @@ def main():
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_bytes(contents)
     subprocess.run([ctl, "bootstrap", domain, str(path)], check=True)
-    print(f"Registered {LABEL} for 07:15 local time and requested its first run.")
+    print(f"Registered {LABEL} for Mondays at 07:15 local time and requested its first run.")
 
 
 if __name__ == "__main__":

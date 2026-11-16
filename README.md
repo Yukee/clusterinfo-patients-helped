@@ -1,8 +1,8 @@
 # ClusterInfo patients helped
 
-A daily, read-only PostHog retrieval estimates two patient counts for ClusterInfo, for each UTC first-arrival month and the full observation period. It uses the [agreed full-period model](https://docs.google.com/document/d/1WB6VoIIBVKr90k6ssXVMHTFe-uj1TRCrWt20gIvWWec/edit?tab=t.0#heading=h.84yf3agr9lvc).
+A weekly, read-only PostHog retrieval estimates two patient counts for ClusterInfo, for each UTC first-arrival month and the full observation period. It uses the [agreed full-period model](https://docs.google.com/document/d/1WB6VoIIBVKr90k6ssXVMHTFe-uj1TRCrWt20gIvWWec/edit?tab=t.0#heading=h.84yf3agr9lvc).
 
-[**Open the latest patient estimates**](https://github.com/Yukee/clusterinfo-patients-helped/tree/reports) · [Daily workflow runs](https://github.com/Yukee/clusterinfo-patients-helped/actions/workflows/estimates.yml)
+[**Open the latest patient estimates**](https://github.com/Yukee/clusterinfo-patients-helped/tree/reports) · [Weekly workflow runs](https://github.com/Yukee/clusterinfo-patients-helped/actions/workflows/estimates.yml)
 
 ## Run
 
@@ -24,13 +24,13 @@ python3 -m unittest -v
 
 ## GitHub Actions
 
-GitHub schedules the hosted runner daily at 06:17 UTC. A maintainer can also start it from **Actions → Daily patient estimates → Run workflow** on main. It checks the model, refreshes the estimates, and publishes the cohort summary and JSON to the reports branch. Its commit history preserves earlier snapshots. The latest successful report remains available if a refresh fails.
+GitHub schedules the hosted runner on Mondays at 06:17 UTC. A maintainer can also start it from **Actions → Weekly patient estimates → Run workflow** on main. It checks the model, refreshes the estimates, and publishes the cohort summary and JSON to the reports branch. Its commit history preserves earlier snapshots. The latest successful report remains available if a refresh fails.
 
 The workflow reads the repository Actions secret `POSTHOG_READONLY_KEY` and uses GitHub’s job token to write to the reports branch. The public summary includes modeled estimates, monthly visitor counts and assumptions. Individual visitor exports and the per-score poll inputs stay out of the published files.
 
 ## Optional local schedule
 
-On macOS, run the following from the checkout. The installer registers a per-user LaunchAgent, runs the job immediately, and schedules it for 07:15 local time. macOS runs a missed calendar job on wake while the user session is active. The agent uses the installed Python executable and reads the PostHog credential from the user's interactive zsh environment, as on the ClusterInfo workstation. Keep the key in that environment and keep the checkout at the installed path. Re-run the installer after moving the repo or changing the interpreter.
+On macOS, run the following from the checkout. The installer registers a per-user LaunchAgent, runs the job immediately, and schedules it for Mondays at 07:15 local time. macOS runs a missed calendar job on wake while the user session is active. The agent uses the installed Python executable and reads the PostHog credential from the user's interactive zsh environment, as on the ClusterInfo workstation. Keep the key in that environment and keep the checkout at the installed path. Re-run the installer after moving the repo or changing the interpreter.
 
 ```sh
 python3 schedule.py install
