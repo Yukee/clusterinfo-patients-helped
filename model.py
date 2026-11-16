@@ -1,6 +1,7 @@
 """Independent Beta posteriors for the two polls; expected patient counts."""
 from array import array
 from collections import defaultdict
+from datetime import timedelta
 from math import floor, isfinite
 from random import Random
 from statistics import fmean
@@ -31,6 +32,19 @@ def summary(values):
 
 def scale(interval, factor):
     return {key: value * factor for key, value in interval.items()}
+
+
+def weekly_average(full_period, start, end):
+    weeks = (end - start) / timedelta(weeks=1)
+    if weeks <= 0:
+        raise ValueError("The weekly average requires a positive observation period.")
+    return {
+        "valid_ids": full_period["valid_ids"] / weeks,
+        "help_seeking_share": full_period["help_seeking_share"],
+        "action_intent_given_help_seeking": full_period["action_intent_given_help_seeking"],
+        "patients_who_find_help": scale(full_period["patients_who_find_help"], 1 / weeks),
+        "patients_with_counterfactual_relief": scale(full_period["patients_with_counterfactual_relief"], 1 / weeks),
+    }
 
 
 def estimate(rows, months, factors, draws=100000, seed=20261116):

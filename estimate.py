@@ -13,7 +13,7 @@ from pathlib import Path
 import sys
 from tempfile import NamedTemporaryFile
 
-from model import estimate, validate_factors
+from model import estimate, validate_factors, weekly_average
 from posthog import ID_COLUMNS, cohort_sql, fetch_counts, visitor_rows
 
 ROOT = Path(__file__).resolve().parent
@@ -78,6 +78,7 @@ def refresh(args):
         raise ValueError("Choose distinct report and CSV paths.")
     counts = fetch_counts(prefix)
     result = estimate(counts, list(months_between(START, end)), factors, args.draws, args.seed)
+    result["average_per_week"] = weekly_average(result["full_period"], START, end)
     if args.ids_csv:
         export_ids(args.ids_csv, prefix, counts)
     report = {"schema_version": 1, "project": 155394, "observation_start_utc": START.isoformat(),
@@ -90,17 +91,20 @@ def refresh(args):
         stream.write("\n")
     print(f"Arrival cohorts through {end.isoformat()} (exclusive), UTC")
     print(f"{'Cohort':<12}{'Valid IDs':>10} {'Seek help':>10} {'Intent | seek':>14}  "
-          "Find help [95% CrI]           Counterfactual relief [95% CrI]")
-    for name, data in [*result["arrival_months"].items(), ("All arrivals", result["full_period"])]:
+          "Act on ClusterInfo learnings [95% CrI]  Counterfactual relief [95% CrI]")
+    for name, data in [("Average/week", result["average_per_week"]), ("All arrivals", result["full_period"]),
+                       *result["arrival_months"].items()]:
         def pct(key):
             return f"{data[key]['mean']:.1%}" if data[key] is not None else "—"
 
         def count(key):
             v = data[key]
             return f"{v['mean']:.1f} [{v['lower_95']:.1f}, {v['upper_95']:.1f}]"
-        print(f"{name:<12}{data['valid_ids']:>10} {pct('help_seeking_share'):>10} "
+        ids = data["valid_ids"]
+        id_text = f"{ids:,.1f}" if isinstance(ids, float) else f"{ids:,}"
+        print(f"{name:<12}{id_text:>10} {pct('help_seeking_share'):>10} "
               f"{pct('action_intent_given_help_seeking'):>14}  "
-              f"{count('patients_who_find_help'):<30}{count('patients_with_counterfactual_relief')}")
+              f"{count('patients_who_find_help'):<40}{count('patients_with_counterfactual_relief')}")
     print(f"Saved {args.output}")
 
 

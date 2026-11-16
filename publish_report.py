@@ -4,6 +4,8 @@ from datetime import datetime, timedelta
 import json
 from pathlib import Path
 
+from model import weekly_average
+
 
 def interval(value):
     return f"{value['mean']:,.1f} ({value['lower_95']:,.1f}–{value['upper_95']:,.1f})"
@@ -14,7 +16,9 @@ def percent(value):
 
 
 def cohort_row(label, cohort):
-    return (f"| {label} | {cohort['valid_ids']:,} | {percent(cohort['help_seeking_share'])} "
+    ids = cohort["valid_ids"]
+    formatted_ids = f"{ids:,.1f}" if isinstance(ids, float) else f"{ids:,}"
+    return (f"| {label} | {formatted_ids} | {percent(cohort['help_seeking_share'])} "
             f"| {percent(cohort['action_intent_given_help_seeking'])} "
             f"| {interval(cohort['patients_who_find_help'])} "
             f"| {interval(cohort['patients_with_counterfactual_relief'])} |")
@@ -29,18 +33,21 @@ def publish(report, output):
     summary = {key: report[key] for key in ("schema_version", "observation_start_utc",
                                              "exclusive_cutoff_utc", "retrieved_utc", "assumptions")}
     summary["full_period"] = {key: report["full_period"][key] for key in columns}
+    summary["average_per_week"] = weekly_average(summary["full_period"], start, end)
     summary["arrival_months"] = {month: {key: cohort[key] for key in columns}
                                  for month, cohort in report["arrival_months"].items()}
     lines = [
         "# ClusterInfo patient estimates", "",
         f"First arrivals from **{start.date().isoformat()}** through **{through}** (UTC).",
         "", "Patient counts are posterior means with 95% credible intervals in parentheses.", "",
-        "| Arrival cohort | First-time IDs | Seeking help | Action intent among help-seekers | Find help | Counterfactual relief |",
+        "| Period | First-time IDs | Seeking help | Action intent among help-seekers | Act on ClusterInfo learnings | Counterfactual relief |",
         "| --- | ---: | ---: | ---: | ---: | ---: |",
-        cohort_row("**Full period**", summary["full_period"]),
+        cohort_row("**Average per week**", summary["average_per_week"]),
+        cohort_row("Full period", summary["full_period"]),
     ]
     lines.extend(cohort_row(month, value) for month, value in sorted(summary["arrival_months"].items()))
-    lines.extend(["", "“Find help” estimates how many patients act on something they learned. "
+    lines.extend(["", "“Average per week” divides full-period counts and their intervals by the elapsed weeks, including partial weeks. "
+                  "Percentages are the full-period shares. “Act on ClusterInfo learnings” estimates how many patients act on what they learned from ClusterInfo. "
                   "“Counterfactual relief” estimates how many benefit earlier because of ClusterInfo.",
                   "", "[Download the estimates as JSON](latest.json) · "
                   "[Model and assumptions](https://github.com/Yukee/clusterinfo-patients-helped/tree/main)"])

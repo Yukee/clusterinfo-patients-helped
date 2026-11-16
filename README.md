@@ -1,6 +1,6 @@
 # ClusterInfo patients helped
 
-A weekly, read-only PostHog retrieval estimates two patient counts for ClusterInfo, for each UTC first-arrival month and the full observation period. It uses the [agreed full-period model](https://docs.google.com/document/d/1WB6VoIIBVKr90k6ssXVMHTFe-uj1TRCrWt20gIvWWec/edit?tab=t.0#heading=h.84yf3agr9lvc).
+A weekly, read-only PostHog retrieval estimates two patient counts for ClusterInfo, per week on average, for each UTC first-arrival month, and for the full observation period. It uses the [agreed full-period model](https://docs.google.com/document/d/1WB6VoIIBVKr90k6ssXVMHTFe-uj1TRCrWt20gIvWWec/edit?tab=t.0#heading=h.84yf3agr9lvc).
 
 [**Open the latest patient estimates**](https://github.com/Yukee/clusterinfo-patients-helped/tree/reports) · [Weekly workflow runs](https://github.com/Yukee/clusterinfo-patients-helped/actions/workflows/estimates.yml)
 
@@ -50,10 +50,10 @@ Write N for valid first-time IDs, S for their estimated help-seeking share, and 
 | helped_given_act_and_help_seeking | 0.50 | Probability an acting help-seeker benefits |
 | counterfactual_share | 0.50 | Share of those benefits attributable to earlier relief through ClusterInfo |
 
-- **Patients who find help on ClusterInfo** = N × S × A × multiple-ID correction × probability of acting. This output counts estimated actors. It includes people who try something and experience no benefit.
-- **Patients who find counterfactual relief** = patients who find help × probability of benefiting after action × counterfactual share.
+- **Act on ClusterInfo learnings** = N × S × A × multiple-ID correction × probability of acting. This output counts estimated actors. It includes people who try something and experience no benefit.
+- **Patients who find counterfactual relief** = patients who act on ClusterInfo learnings × probability of benefiting after action × counterfactual share.
 
-Counts are posterior expectations for arrival cohorts. Actual action, benefit and attribution are modeled. The four downstream factors stay fixed within a run, so the intervals quantify uncertainty from the polls under the stated assumptions. The default relief estimate is one quarter of the find-help estimate.
+Counts are posterior expectations for arrival cohorts. Actual action, benefit and attribution are modeled. The four downstream factors stay fixed within a run, so the intervals quantify uncertainty from the polls under the stated assumptions. The default relief estimate is one quarter of the estimate of patients who act.
 
 ## Retrieval and inference
 
@@ -66,4 +66,4 @@ Counts are posterior expectations for arrival cohorts. Actual action, benefit an
 
 ### Reference replay
 
-For the cutoff 2026-11-16 11:59:28 UTC the implementation reproduced 9,360 eligible arrivals, help-seeking share 38.5% and conditional actionable learning 47.9%. The four action posteriors were Beta(1, 4), Beta(2, 4), Beta(9, 2), and Beta(33, 2). With the default downstream factors this gives approximately 1,243 patients who find help and 311 with counterfactual relief over that period.
+For the cutoff 2026-11-16 11:59:28 UTC the implementation reproduced 9,360 eligible arrivals, help-seeking share 38.5% and conditional actionable learning 47.9%. The four action posteriors were Beta(1, 4), Beta(2, 4), Beta(9, 2), and Beta(33, 2). With the default downstream factors this gives approximately 1,243 patients who act on ClusterInfo learnings and 311 with counterfactual relief over that period.
