@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "observation_start_utc": "2026-09-30T23:56:05+00:00",
+  "exclusive_cutoff_utc": "2026-11-16T00:00:00+00:00",
+  "retrieved_utc": "2026-11-16T13:44:24.598363+00:00",
+  "assumptions": {
+    "multiple_id_correction": 0.8,
+    "act_given_intent_and_help_seeking": 0.9,
+    "helped_given_act_and_help_seeking": 0.5,
+    "counterfactual_share": 0.5
+  },
+  "full_period": {
+    "valid_ids": 9181,
+    "help_seeking_share": {
+      "mean": 0.3853924511063279,
+      "lower_95": 0.36048512995958537,
+      "upper_95": 0.41118908795064296
+    },
+    "action_intent_given_help_seeking": {
+      "mean": 0.4805698703659749,
+      "lower_95": 0.3452055340225343,
+      "upper_95": 0.6607487307119488
+    },
+    "patients_who_find_help": {
+      "mean": 1223.75233258258,
+      "lower_95": 879.1418048416307,
+      "upper_95": 1691.0240665950985
+    },
+    "patients_with_counterfactual_relief": {
+      "mean": 305.938083145645,
+      "lower_95": 219.78545121040767,
+      "upper_95": 422.7560166487746
+    }
+  },
+  "arrival_months": {
+    "2026-09": {
+      "valid_ids": 1,
+      "help_seeking_share": {
+        "mean": 0.3436908726386595,
+        "lower_95": 0.2953045030178555,
+        "upper_95": 0.3942843700505917
+      },
+      "action_intent_given_help_seeking": {
+        "mean": 0.19962265314520072,
+        "lower_95": 0.006239986167751722,
+        "upper_95": 0.6011379459279842
+      },
+      "patients_who_find_help": {
+        "mean": 0.04939115722904792,
+        "lower_95": 0.00153182226471985,
+        "upper_95": 0.14991629156401504
+      },
+      "patients_with_counterfactual_relief": {
+        "mean": 0.01234778930726198,
+        "lower_95": 0.0003829555661799625,
+        "upper_95": 0.03747907289100376
+      }
+    },
+    "2026-10": {
+      "valid_ids": 5448,
+      "help_seeking_share": {
+        "mean": 0.3890946812280922,
+        "lower_95": 0.3648011983554852,
+        "upper_95": 0.41432851664198805
+      },
+      "action_intent_given_help_seeking": {
+        "mean": 0.49908039830308504,
+        "lower_95": 0.3683391189304907,
+        "upper_95": 0.6722308373473147
+      },
+      "patients_who_find_help": {
+        "mean": 761.4124570134277,
+        "lower_95": 561.867309070232,
+        "upper_95": 1030.8121577573838
+      },
+      "patients_with_counterfactual_relief": {
+        "mean": 190.35311425335692,
+        "lower_95": 140.466827267558,
+        "upper_95": 257.70303943934596
+      }
+    },
+    "2026-11": {
+      "valid_ids": 3732,
+      "help_seeking_share": {
+        "mean": 0.3799990834415626,
+        "lower_95": 0.3542874243292752,
+        "upper_95": 0.4067410490248894
+      },
+      "action_intent_given_help_seeking": {
+        "mean": 0.45296231288269223,
+        "lower_95": 0.31067137466523836,
+        "upper_95": 0.6435048307307939
+      },
+      "patients_who_find_help": {
+        "mean": 462.2904844119233,
+        "lower_95": 316.80188188105484,
+        "upper_95": 660.1921786134333
+      },
+      "patients_with_counterfactual_relief": {
+        "mean": 115.57262110298082,
+        "lower_95": 79.20047047026371,
+        "upper_95": 165.04804465335832
+      }
+    }
+  }
+}
