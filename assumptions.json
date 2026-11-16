@@ -1,0 +1,6 @@
+{
+  "multiple_id_correction": 0.8,
+  "act_given_intent_and_help_seeking": 0.9,
+  "helped_given_act_and_help_seeking": 0.5,
+  "counterfactual_share": 0.5
+}
