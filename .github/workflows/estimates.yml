@@ -1,0 +1,64 @@
+name: Daily patient estimates
+
+on:
+  schedule:
+    - cron: '17 6 * * *'
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/estimates.yml'
+      - 'estimate.py'
+      - 'model.py'
+      - 'posthog.py'
+      - 'cohort.sql'
+      - 'assumptions.json'
+      - 'publish_report.py'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-daily-estimates
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out model
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          persist-credentials: false
+
+      - name: Test model
+        run: python3 -m unittest -v
+
+      - name: Retrieve PostHog counts and estimate outcomes
+        env:
+          POSTHOG_READONLY_KEY: ${{ secrets.POSTHOG_READONLY_KEY }}
+        run: python3 estimate.py
+
+      - name: Check out report history
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          ref: reports
+          path: publication
+
+      - name: Render the latest report
+        run: |
+          python3 publish_report.py reports/latest.json publication
+          cat publication/README.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Publish the report
+        working-directory: publication
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- README.md latest.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Refresh patient estimates for $(date -u +%F)"
+            git push origin HEAD:refs/heads/reports
+          fi
