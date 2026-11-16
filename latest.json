@@ -2,7 +2,7 @@
   "schema_version": 1,
   "observation_start_utc": "2026-09-30T23:56:05+00:00",
   "exclusive_cutoff_utc": "2026-11-16T00:00:00+00:00",
-  "retrieved_utc": "2026-11-16T13:44:24.598363+00:00",
+  "retrieved_utc": "2026-11-16T14:33:45.339892+00:00",
   "assumptions": {
     "multiple_id_correction": 0.8,
     "act_given_intent_and_help_seeking": 0.9,
@@ -71,12 +71,12 @@
       "patients_who_find_help": {
         "mean": 761.4124570134277,
         "lower_95": 561.867309070232,
-        "upper_95": 1030.8121577573838
+        "upper_95": 1030.812157757384
       },
       "patients_with_counterfactual_relief": {
         "mean": 190.35311425335692,
         "lower_95": 140.466827267558,
-        "upper_95": 257.70303943934596
+        "upper_95": 257.703039439346
       }
     },
     "2026-11": {
